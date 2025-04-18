@@ -67,11 +67,11 @@ function resetGrid() {
     binaryOutput.textContent = '';
 }
 
-// Generate matrix with numbers
+// Generate matrix with numbers and export as JSON
 function generateMatrix() {
-    let matrix = '';
+    const matrix = [];
     for (let i = 0; i < gridSize; i++) {
-        let row = '';
+        const row = [];
         for (let j = 0; j < gridSize; j++) {
             const cell = cells[i][j];
             let number = 0;
@@ -84,12 +84,26 @@ function generateMatrix() {
                 number = 4;
             }
             
-            // Add padding to keep numbers aligned
-            row += number.toString().padStart(2, ' ') + ' ';
+            row.push(number);
         }
-        matrix += row.trim() + '\n';
+        matrix.push(row);
     }
-    binaryOutput.textContent = matrix;
+
+    // Create JSON file
+    const jsonData = JSON.stringify(matrix, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create download link
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'pixel_matrix.json';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 // Event listeners
