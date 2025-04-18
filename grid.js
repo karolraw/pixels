@@ -89,31 +89,25 @@ function generateMatrix() {
         matrix.push(row);
     }
 
-    // Create JSON file
+    // Create JSON data
     const jsonData = JSON.stringify(matrix, null, 2);
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    
+    // Create a data URL
+    const dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonData);
     
     // Create and style the download link
     const a = document.createElement('a');
-    a.href = url;
+    a.href = dataUrl;
     a.download = 'pixel_matrix.json';
     a.style.display = 'none';
     document.body.appendChild(a);
     
-    // Use a more reliable method for mobile devices
-    if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
-        // For mobile devices, open in a new tab
-        window.open(url, '_blank');
-    } else {
-        // For desktop, trigger download
-        a.click();
-    }
+    // Trigger download
+    a.click();
     
     // Cleanup
     setTimeout(() => {
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
     }, 100);
 }
 
